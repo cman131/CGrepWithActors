@@ -8,37 +8,14 @@ import java.util.regex.Pattern;
  * The executor
  */
 public class GrepExecutor {
-
-    final ExecutorService executor;
-    final ExecutorCompletionService<Found> completionService;
-    final static int THREAD_POOL_SIZE = 3;
-    final static int NUM_SEARCHES = 3;
-
+	
+	private int files = -1;
+	
     public GrepExecutor() {
-        // Create our executor
-        executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-        // Now wrap it in a nice cozy completion service
-        completionService = new ExecutorCompletionService<Found>(executor);
-
-        // We will want this so that the executor shuts down properly if the
-        // application is closed while the threads are running.
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                executor.shutdown();
-                while (true) {
-                    try {
-                        // Wait for the service to exit
-                        if (executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                            break;
-                        }
-                    } catch (InterruptedException ignored) {
-                    }
-                }
-                System.out.println("Closing now");
-            }
-        }));
-
+    }
+    
+    public void sendFiles(int filecount){
+    	files = filecount;
     }
 
     /**
@@ -47,22 +24,19 @@ public class GrepExecutor {
      * @param filenames
      * @param pattern
      */
-    public void beginSearch(ArrayList<String> filenames, Pattern pattern) {
+    public void beginSearch(CompletionService completionService) {
 
-		/* FOR ADDING DATA TO BE QUERIED */
-
-        for (String filename : filenames) {
-            System.out.println("Submitting " + filename + " for search");
-            completionService.submit(new Grepper(filename, pattern));  // This will start running immediately
-        }
-
-
-		/* FOR READING THE DATA FROM THE FUTURE */
+    	while(files==-1){
+    		try {
+				Thread.currentThread().sleep(100);
+			} catch (InterruptedException e) {
+			}
+    	}
 
 		/* completionService.take() will wait until the next Found is completed
             which satisfied the requirement that we print the results as they
 			are completed */
-        for (int i = 0; i < filenames.size(); i++) {
+        for (int i = 0; i < files; i++) {
             Future<Found> future = null;
             try {
                 // This will wait until we get a result
@@ -88,7 +62,5 @@ public class GrepExecutor {
             }
 
         }
-
-        executor.shutdownNow();
     }
 }
