@@ -11,10 +11,6 @@ public class ScanActor extends ActorRef{
 		this.fileName = filename;
 		this.collector = collector;
 	}
-	
-	public void run(){
-		
-	}
 
 	@Override
 	public boolean isTerminated() {
