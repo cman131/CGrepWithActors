@@ -1,3 +1,4 @@
+package Actors;
 
 public class ScanActor extends Thread{
 	final String fileName;
