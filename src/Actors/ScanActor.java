@@ -1,6 +1,9 @@
 package Actors;
 
-public class ScanActor extends Thread{
+import akka.actor.ActorPath;
+import akka.actor.ActorRef;
+
+public class ScanActor extends ActorRef{
 	final String fileName;
 	final CollectionActor collector;
 	
@@ -11,5 +14,17 @@ public class ScanActor extends Thread{
 	
 	public void run(){
 		
+	}
+
+	@Override
+	public boolean isTerminated() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ActorPath path() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
