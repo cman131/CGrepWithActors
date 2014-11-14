@@ -1,30 +1,18 @@
 package Actors;
 
-import akka.actor.ActorPath;
-import akka.actor.ActorRef;
+import akka.actor.UntypedActor;
 
-public class ScanActor extends ActorRef{
-	final String fileName;
-	final CollectionActor collector;
-	
-	public ScanActor(final String filename, final CollectionActor collector){
-		this.fileName = filename;
-		this.collector = collector;
-	}
-	
-	public void run(){
-		
-	}
+public class ScanActor extends UntypedActor {
+    final String fileName;
+    final CollectionActor collector;
 
-	@Override
-	public boolean isTerminated() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public ScanActor(final String filename, final CollectionActor collector) {
+        this.fileName = filename;
+        this.collector = collector;
+    }
 
-	@Override
-	public ActorPath path() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void onReceive(Object o) throws Exception {
+
+    }
 }
