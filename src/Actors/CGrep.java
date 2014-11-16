@@ -30,50 +30,56 @@ public class CGrep {
 	 * @param ptrn the RegEx pattern to look for in the file(s)
 	 * @param files a list of files to analyze.
 	 */
-    public CGrep(Pattern ptrn, List<String> files) {
-        // Create a CollectionActor reference
-        ActorSystem system = ActorSystem.create();
-        Props porp = Props.create(CollectionActor.class);
-        ActorRef collector = system.actorOf(porp);
+	public CGrep(Pattern ptrn, List<String> files) {
+		// Create a CollectionActor reference
+		ActorSystem system = ActorSystem.create();
+		Props porp = Props.create(CollectionActor.class);
+		ActorRef collector = system.actorOf(porp);
 
-        // Send the file count message to the collector
-        collector.tell(new FileCountMessage(files.size()), ActorRef.noSender());
+		// Send the file count message to the collector
+		collector.tell(new FileCountMessage(files.size()), ActorRef.noSender());
 
-        // Create ScanActor(s) given the file names provided
-        ActorRef scanner;
-        for (String fName : files) {
-            porp = Props.create(ScanActor.class);
-            scanner = system.actorOf(porp);
-            scanner.tell(new ConfigureMessage(fName, collector, ptrn), ActorRef.noSender());
-        }
-    }
+		// Create ScanActor(s) given the file names provided
+		ActorRef scanner;
+		for (String fName : files) {
+			porp = Props.create(ScanActor.class);
+			scanner = system.actorOf(porp);
+			scanner.tell(new ConfigureMessage(fName, collector, ptrn), 
+					ActorRef.noSender());
+		}
+	}
 
-    /* Main Method, starts the application */
-    public static void main(String[] args) {
-        // Ensure there is at least one arg
-        if (args.length <= 0) {
-            System.out.println("usage: java <pattern> <filename(s)...>");
-            System.exit(1);
-        }
 
-        // The pattern is the first arg.
-        Pattern pattern = Pattern.compile(args[0]);
+	/**
+	 * Parse arguments, instantiate new CGREP which will start the actors
+	 *
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// Ensure there is at least one arg
+		if (args.length <= 0) {
+			System.out.println("usage: java <pattern> <filename(s)...>");
+			System.exit(1);
+		}
 
-        // Create the list of files
-        List<String> files = new ArrayList<String>();
-        for (int i = 1; i < args.length; i++) {
-            files.add(args[i]);
-        }
-        // If no files were provided, (list size is 0), ask for a file
-        if (files.size() == 0) {
-            // No files were provided, use the default file
-            String input;
-            Console console = System.console();
-            input = console.readLine("Enter a file name:");
-            files.add(input);
-        }
+		// The pattern is the first arg.
+		Pattern pattern = Pattern.compile(args[0]);
 
-        // Create CGrep
-        new CGrep(pattern, files);
-    }
+		// Create the list of files
+		List<String> files = new ArrayList<String>();
+		for (int i = 1; i < args.length; i++) {
+			files.add(args[i]);
+		}
+		// If no files were provided, (list size is 0), ask for a file
+		if (files.size() == 0) {
+			// No files were provided, use the default file
+			String input;
+			Console console = System.console();
+			input = console.readLine("Enter a file name:");
+			files.add(input);
+		}
+
+		// Create CGrep
+		new CGrep(pattern, files);
+	}
 }
