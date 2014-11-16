@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import akka.actor.Actor;
-import akka.actor.UntypedActor;
+import akka.actor.ActorRef;
 
 public class CGrep {
 
@@ -15,22 +14,17 @@ public class CGrep {
 
 	public CGrep(Pattern ptrn, List<String> files) {
 		// Create a CollectionActor
-		Actor collector = new CollectionActor();
-		// Start the collection actor
-		// TODO: start collection
+		CollectionActor collector = new CollectionActor();
 		// Send the filecount message
-		// TODO: send filecount message
+		collector.getSelf().tell(files.size(), ActorRef.noSender());
 		
 		// Create ScanActor(s)
-		List<ScanActor> scanners = new ArrayList<ScanActor>();
 		ScanActor scanner;
 		for (String fName : files) {
 			scanner = new ScanActor(ptrn);
 			scanner.getSelf();
-			// TODO: Send the config mesage here
+			scanner.getSelf().tell(fName, collector.self());
 		}
-		
-		// Start scanners ... send references to the collector
 	}
 
 
