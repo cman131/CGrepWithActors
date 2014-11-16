@@ -1,7 +1,9 @@
 package Actors;
 
+import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 //import akka.actor.Actors;
+
 
 import java.util.HashMap;
 
@@ -20,10 +22,10 @@ public class CollectionActor extends UntypedActor {
     	}
     	else{
     		founds.put(((FoundMessage)o).filename, (FoundMessage)o);
+    		getSender().tell(akka.actor.PoisonPill.getInstance(), ActorRef.noSender());
     		System.out.println(o.toString());
     		if(fileCount==founds.size()){
     			System.exit(0);
-    			//akka.actor.Actors.registry().shutdown();
     		}
     	}
     }
