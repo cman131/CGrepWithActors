@@ -47,7 +47,7 @@ public class ScanActor extends UntypedActor {
                 sc.close();
             }
         }
-
+        
         responseActor.tell(new FoundMessage(fileName, results), getSelf());
     }
 }
