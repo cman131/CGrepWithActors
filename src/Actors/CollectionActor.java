@@ -18,7 +18,8 @@ public class CollectionActor extends UntypedActor {
     		this.fileCount = ((FileCountMessage)o).count;
     	}
     	else{
-    		founds.put(((FoundMessage)o).filename, (FoundMessage)o);
+    		String file = ((FoundMessage)o).filename==null ? "-" : ((FoundMessage)o).filename;
+    		founds.put(file, (FoundMessage)o);
     		getSender().tell(akka.actor.PoisonPill.getInstance(), ActorRef.noSender());
     		System.out.println(o.toString());
     		if(fileCount==founds.size()){

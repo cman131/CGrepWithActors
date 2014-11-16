@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class ScanActor extends UntypedActor {
 
-    final Pattern pattern;
+    private Pattern pattern;
 
     @Override
     public void onReceive(Object o) throws Exception {

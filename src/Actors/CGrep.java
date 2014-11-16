@@ -23,14 +23,14 @@ public class CGrep {
 		ActorRef collector =  system.actorOf(porp);
 		
 		// Send the filecount message
-		collector.tell(files.size(), ActorRef.noSender());
+		collector.tell(new FileCountMessage(files.size()), ActorRef.noSender());
 		
 		// Create ScanActor(s)
 		ActorRef scanner;
 		for (String fName : files) {
 			porp = Props.create(ScanActor.class);
 			scanner = system.actorOf(porp);
-			scanner.tell(fName, collector);
+			scanner.tell(new ConfigureMessage(fName, collector, ptrn), ActorRef.noSender());
 		}
 	}
 
