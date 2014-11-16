@@ -9,8 +9,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+/**
+ * CGrep.java
+ * 
+ * This class creates a CollectionActor and ScanActors, specifically one
+ * CollectionActor in addition to one ScanActor for each file provided to
+ * the constructor.  The ScanActors are given a configuration which provides
+ * them with the filename and the pattern they are to use on that file.  The 
+ * CollectionActor is sent a message letting it know how many results to wait
+ * for.
+ * 
+ * @author geoffberl
+ */
 public class CGrep {
 
+	/**
+	 * Constructor - Accepts a list of files and a pattern to look for.  A
+	 * ScanActor is created for each filename provided.  A CollectionActor
+	 * is created to query and handle the results from each ScanActor.
+	 * @param ptrn the RegEx pattern to look for in the file(s)
+	 * @param files a list of files to analyze.
+	 */
     public CGrep(Pattern ptrn, List<String> files) {
         // Create a CollectionActor reference
         ActorSystem system = ActorSystem.create();
@@ -29,7 +48,7 @@ public class CGrep {
         }
     }
 
-
+    /* Main Method, starts the application */
     public static void main(String[] args) {
         // Ensure there is at least one arg
         if (args.length <= 0) {
