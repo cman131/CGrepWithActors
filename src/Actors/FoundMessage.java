@@ -35,7 +35,13 @@ public class FoundMessage {
     public String toString() {
         // A nice and fancy print out of the results for another class to print
         StringBuilder retString = new StringBuilder();
-        retString.append("\nFile: " + filename + "\n");
+        if (filename == null) {
+            retString.append("\nFile: Standard In\n");
+
+        } else {
+            retString.append("\nFile: " + filename + "\n");
+
+        }
         retString.append("----------------\n");
         retString.append("Matching Lines:\n");
 
