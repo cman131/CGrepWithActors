@@ -12,9 +12,6 @@ public class CollectionActor extends UntypedActor {
     private int fileCount;
     private HashMap<String, FoundMessage> founds;
 
-    public CollectionActor() {
-    }
-
     @Override
     public void onReceive(Object o) throws Exception {
     	if(o instanceof FileCountMessage){

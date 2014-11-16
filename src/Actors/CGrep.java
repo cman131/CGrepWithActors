@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import akka.actor.ActorRef;
+import akka.actor.ActorSystem;
+import akka.actor.Props;
+import akka.actor.UntypedActor;
+import akka.actor.UntypedActorFactory;
 
 public class CGrep {
 
@@ -14,15 +18,19 @@ public class CGrep {
 
 	public CGrep(Pattern ptrn, List<String> files) {
 		// Create a CollectionActor
-		CollectionActor collector = new CollectionActor();
+		ActorSystem system = ActorSystem.create();
+		Props porp = Props.create(CollectionActor.class);
+		ActorRef collector =  system.actorOf(porp);
+		
 		// Send the filecount message
-		collector.getSelf().tell(files.size(), ActorRef.noSender());
+		collector.tell(files.size(), ActorRef.noSender());
 		
 		// Create ScanActor(s)
-		ScanActor scanner;
+		ActorRef scanner;
 		for (String fName : files) {
-			scanner = new ScanActor(ptrn);
-			scanner.getSelf().tell(fName, collector.self());
+			porp = Props.create(ScanActor.class);
+			scanner = system.actorOf(porp);
+			scanner.tell(fName, collector);
 		}
 	}
 
