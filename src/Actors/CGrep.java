@@ -11,19 +11,16 @@ import java.util.regex.Pattern;
 
 public class CGrep {
 
-    // The default file if no files are provided
-    public static final String DEFAULT_FILE = "";
-
     public CGrep(Pattern ptrn, List<String> files) {
-        // Create a CollectionActor
+        // Create a CollectionActor reference
         ActorSystem system = ActorSystem.create();
         Props porp = Props.create(CollectionActor.class);
         ActorRef collector = system.actorOf(porp);
 
-        // Send the filecount message
+        // Send the file count message to the collector
         collector.tell(new FileCountMessage(files.size()), ActorRef.noSender());
 
-        // Create ScanActor(s)
+        // Create ScanActor(s) given the file names provided
         ActorRef scanner;
         for (String fName : files) {
             porp = Props.create(ScanActor.class);
@@ -48,6 +45,7 @@ public class CGrep {
         for (int i = 1; i < args.length; i++) {
             files.add(args[i]);
         }
+        // If no files were provided, (list size is 0), ask for a file
         if (files.size() == 0) {
             // No files were provided, use the default file
             String input;
