@@ -4,12 +4,19 @@ import java.util.ArrayList;
 
 /**
  * Created by kocsen on 11/14/14.
+ * Message that encapsulates results from a scan actor.
  */
 public class FoundMessage {
 
     public final String filename;
     public final ArrayList<String> matchingLines;
 
+    /**
+     * constructor
+     *
+     * @param filename      - filename
+     * @param matchingLines - Array of matching lines.
+     */
     public FoundMessage(String filename, ArrayList<String> matchingLines) {
         this.filename = filename;
         this.matchingLines = matchingLines;
@@ -19,6 +26,11 @@ public class FoundMessage {
         return this.matchingLines;
     }
 
+    /**
+     * Prints a found message to spec.
+     *
+     * @return prety print
+     */
     @Override
     public String toString() {
         // A nice and fancy print out of the results for another class to print

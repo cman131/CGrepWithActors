@@ -14,6 +14,21 @@ public class ScanActor extends UntypedActor {
 
     private Pattern pattern;
 
+    /**
+     * On receive message.
+     * <p/>
+     * WE only receive one message, thats a ConfigureMessage.
+     * <p/>
+     * When we get the configure message, it will give us enough information
+     * to start grepping through the file.
+     * <p/>
+     * While grepping through the file we pul all results in an array list.
+     * <p/>
+     * Finally we send the response actor a Found Message with our results.
+     *
+     * @param o - Message, only of type ConfigureMessage
+     * @throws Exception
+     */
     @Override
     public void onReceive(Object o) throws Exception {
         ConfigureMessage message = (ConfigureMessage) o;
@@ -42,7 +57,7 @@ public class ScanActor extends UntypedActor {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
-            // Sorry, just that if there is an exception, this would never have been closed.
+            // Just in case, close
             if (sc != null) {
                 sc.close();
             }

@@ -6,6 +6,10 @@ package Actors;
 public class FileCountMessage {
 	public final int count;
 	
+	/**
+	 * Creates a file count message
+	 * @param fileCount - the number of inputted files to expect
+	 */
 	public FileCountMessage(final int fileCount){
 		count = fileCount;
 	}
