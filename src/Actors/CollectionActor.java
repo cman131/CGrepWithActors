@@ -1,6 +1,7 @@
 package Actors;
 
 import akka.actor.UntypedActor;
+//import akka.actor.Actors;
 
 import java.util.HashMap;
 
@@ -12,19 +13,20 @@ public class CollectionActor extends UntypedActor {
     public CollectionActor() {
     }
 
-
     @Override
     public void onReceive(Object o) throws Exception {
-
+    	if(o instanceof FileCountMessage){
+    		this.fileCount = ((FileCountMessage)o).count;
+    	}
+    	else{
+    		founds.put(((FoundMessage)o).filename, (FoundMessage)o);
+    		System.out.println(o.toString());
+    		if(fileCount==founds.size()){
+    			System.exit(0);
+    			//akka.actor.Actors.registry().shutdown();
+    		}
+    	}
     }
 
-    public void sendFileCount(int fileCount) {
-        this.fileCount = fileCount;
-    }
-
-    public void sendFound(FoundMessage found) {
-        founds.put(Thread.currentThread().getName(), found);
-    }
-
-
+    
 }
