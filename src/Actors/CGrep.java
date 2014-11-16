@@ -11,6 +11,12 @@ import java.util.regex.Pattern;
 
 public class CGrep {
 
+    /**
+     * Start all the actors, including the collector Greppers (scan actors)
+     *
+     * @param ptrn
+     * @param files
+     */
     public CGrep(Pattern ptrn, List<String> files) {
         // Create a CollectionActor reference
         ActorSystem system = ActorSystem.create();
@@ -30,6 +36,11 @@ public class CGrep {
     }
 
 
+    /**
+     * Parse arguments, instantiate new CGREP which will start the actors
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         // Ensure there is at least one arg
         if (args.length <= 0) {
