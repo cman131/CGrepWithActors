@@ -1,8 +1,12 @@
 package Actors;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import akka.actor.Actor;
+import akka.actor.UntypedActor;
 
 public class CGrep {
 
@@ -11,12 +15,18 @@ public class CGrep {
 
 	public CGrep(Pattern ptrn, List<String> files) {
 		// Create a CollectionActor
-		CollectionActor collector = new CollectionActor();
-
+		Actor collector = new CollectionActor();
+		// Start the collection actor
+		// TODO: start collection
+		// Send the filecount message
+		// TODO: send filecount message
+		
 		// Create ScanActor(s)
 		List<ScanActor> scanners = new ArrayList<ScanActor>();
+		Actor scanner;
 		for (String fName : files) {
-			scanners.add(new ScanActor(ptrn));
+			scanner = new ScanActor(ptrn);
+			// TODO: Send the config mesage here
 		}
 		
 		// Start scanners ... send references to the collector
@@ -40,7 +50,10 @@ public class CGrep {
 		}
 		if (files.size() == 0) {
 			// No files were provided, use the default file
-			files.add(CGrep.DEFAULT_FILE);
+			String input;
+            Console console = System.console();
+            input = console.readLine("Enter a file name:");
+			files.add(input);
 		}
 
 		// Create CGrep
