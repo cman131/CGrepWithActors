@@ -4,7 +4,6 @@ import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -38,13 +37,18 @@ public class ScanActor extends UntypedActor {
         ActorRef responseActor = message.getCollectionActor();
         this.pattern = message.getPattern();
 
+        Scanner sc;
+
+        if (fileName == null) {
+            sc = new Scanner(System.in);
+        } else {
+            sc = new Scanner(new File(fileName));
+        }
+
         ArrayList<String> results = new ArrayList<String>();
         Matcher matcher;
-        File file = new File(fileName);
-        Scanner sc = null;
         try {
             int lineCount = 1;
-            sc = new Scanner(file);
 
             while (sc.hasNextLine()) {
                 String line = sc.nextLine();
@@ -54,15 +58,13 @@ public class ScanActor extends UntypedActor {
                 }
                 lineCount++;
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } finally {
             // Just in case, close
             if (sc != null) {
                 sc.close();
             }
         }
-        
+
         responseActor.tell(new FoundMessage(fileName, results), getSelf());
     }
 }
