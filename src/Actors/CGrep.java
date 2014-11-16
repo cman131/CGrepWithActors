@@ -22,7 +22,6 @@ public class CGrep {
 		ScanActor scanner;
 		for (String fName : files) {
 			scanner = new ScanActor(ptrn);
-			scanner.getSelf();
 			scanner.getSelf().tell(fName, collector.self());
 		}
 	}
