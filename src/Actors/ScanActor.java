@@ -14,10 +14,6 @@ public class ScanActor extends UntypedActor {
 
     final Pattern pattern;
 
-    public ScanActor(final Pattern regexPattern) {
-        this.pattern = regexPattern;
-    }
-
     @Override
     public void onReceive(Object o) throws Exception {
         ConfigureMessage message = (ConfigureMessage) o;
@@ -25,7 +21,7 @@ public class ScanActor extends UntypedActor {
         System.out.println(String.format("Scan Actor for %s received message. Starting to Grep...", message.getFilename()));
         String fileName = message.getFilename();
         ActorRef responseActor = message.getCollectionActor();
-
+        this.pattern = message.getPattern();
 
         ArrayList<String> results = new ArrayList<String>();
         Matcher matcher;
