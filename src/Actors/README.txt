@@ -9,6 +9,8 @@ CGrep.java is the point of entry, it can be called acoording to spec:
 Notice we are using the latest version of Akka as of Nov 2014 which
 is 2.10, which means we are using Props to instantiate the Actors.
 
+When reading in from standard in, it will keep reading until reaching EOF symbol
+
 
 Geoff Berl,
 Conor Wright,
