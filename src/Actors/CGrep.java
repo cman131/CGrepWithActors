@@ -23,9 +23,10 @@ public class CGrep {
 		
 		// Create ScanActor(s)
 		List<ScanActor> scanners = new ArrayList<ScanActor>();
-		Actor scanner;
+		ScanActor scanner;
 		for (String fName : files) {
 			scanner = new ScanActor(ptrn);
+			scanner.getSelf();
 			// TODO: Send the config mesage here
 		}
 		
