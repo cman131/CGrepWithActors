@@ -1,19 +1,58 @@
 package Actors;
 
+import akka.actor.ActorRef;
 import akka.actor.UntypedActor;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ScanActor extends UntypedActor {
 
-    final String fileName;
-    final CollectionActor collector;
+    final Pattern pattern;
 
-    public ScanActor(final String filename, final CollectionActor collector) {
-        this.fileName = filename;
-        this.collector = collector;
+    public ScanActor(final Pattern regexPattern) {
+        this.pattern = regexPattern;
     }
 
     @Override
     public void onReceive(Object o) throws Exception {
+        ConfigureMessage message = (ConfigureMessage) o;
 
+        System.out.println(String.format("Scan Actor for %s received message. Starting to Grep...", message.getFilename()));
+        String fileName = message.getFilename();
+        ActorRef responseActor = message.getCollectionActor();
+
+
+        ArrayList<String> results = new ArrayList<String>();
+        Matcher matcher;
+        File file = new File(fileName);
+        Scanner sc = null;
+        try {
+            int lineCount = 1;
+            sc = new Scanner(file);
+
+            while (sc.hasNextLine()) {
+                String line = sc.nextLine();
+                matcher = this.pattern.matcher(line);
+                if (matcher.find()) {
+                    results.add("Line " + lineCount + ": " + line);
+                }
+                lineCount++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            // Sorry, just that if there is an exception, this would never have been closed.
+            if (sc != null) {
+                sc.close();
+            }
+        }
+
+        responseActor.tell(new FoundMessage(fileName, results), );
+        // Send final message (results)
     }
 }
